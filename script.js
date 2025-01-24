@@ -17,7 +17,10 @@ class BubbleGame {
     this.highScore = parseInt(localStorage.getItem('bubbleGameHighScore')) || 0;
     this.highScoreElement.textContent = this.highScore;
     
+    this.cursorPos = { x: 0, y: 0 };
+    this.targetPos = { x: 0, y: 0 };
     this.setupEventListeners();
+    this.animateCursor();
   }
 
   setupEventListeners() {
@@ -27,11 +30,10 @@ class BubbleGame {
     // Handle both click and touch events
     this.container.addEventListener('mousemove', (e) => {
       const rect = this.container.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      this.cursor.style.left = x + 'px';
-      this.cursor.style.top = y + 'px';
+      this.targetPos = {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
     });
     
     this.container.addEventListener('mouseleave', () => {
@@ -46,11 +48,10 @@ class BubbleGame {
       e.preventDefault();
       const rect = this.container.getBoundingClientRect();
       const touch = e.touches[0];
-      const x = touch.clientX - rect.left;
-      const y = touch.clientY - rect.top;
-      
-      this.cursor.style.left = x + 'px';
-      this.cursor.style.top = y + 'px';
+      this.targetPos = {
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top
+      };
     }, { passive: false });
     
     this.gameArea.addEventListener('click', (e) => this.handleInteraction(e));
@@ -175,6 +176,22 @@ class BubbleGame {
     
     this.finalScoreElement.textContent = this.score;
     this.gameOverElement.style.display = 'block';
+  }
+
+  animateCursor() {
+    // Smoothly interpolate between current and target position
+    const ease = 0.1; // Lower number = slower movement
+    
+    const dx = this.targetPos.x - this.cursorPos.x;
+    const dy = this.targetPos.y - this.cursorPos.y;
+    
+    this.cursorPos.x += dx * ease;
+    this.cursorPos.y += dy * ease;
+    
+    this.cursor.style.left = this.cursorPos.x + 'px';
+    this.cursor.style.top = this.cursorPos.y + 'px';
+    
+    requestAnimationFrame(() => this.animateCursor());
   }
 }
 

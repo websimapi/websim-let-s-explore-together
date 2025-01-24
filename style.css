@@ -102,13 +102,14 @@ button:active {
   position: fixed;
   width: 20px;
   height: 20px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(74, 47, 30, 0.8);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: 9999;
   mix-blend-mode: difference;
   transition: opacity 0.3s ease;
+  box-shadow: 0 0 10px rgba(74, 47, 30, 0.4);
 }
 
 .pop-animation {
